@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Link } from "react-router-dom";
 
 const Index = () => {
+  const [jobListings, setJobListings] = useState([]);
+
+  useEffect(() => {
+    const storedJobListings = JSON.parse(localStorage.getItem("jobListings")) || [];
+    setJobListings(storedJobListings);
+  }, []);
+
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center space-y-8 p-4">
       <h1 className="text-4xl font-bold">Job Listing Website</h1>
@@ -39,6 +47,24 @@ const Index = () => {
           <Button className="w-full">Search</Button>
         </CardContent>
       </Card>
+      <Link to="/post-job">
+        <Button className="mt-4">Post a Job</Button>
+      </Link>
+      <div className="w-full max-w-md mt-8 space-y-4">
+        {jobListings.map((job, index) => (
+          <Card key={index}>
+            <CardHeader>
+              <CardTitle>{job.jobTitle}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p><strong>Company:</strong> {job.companyName}</p>
+              <p><strong>Location:</strong> {job.location}</p>
+              <p><strong>Type:</strong> {job.jobType}</p>
+              <p>{job.description}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };
